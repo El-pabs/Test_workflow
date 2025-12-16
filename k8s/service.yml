@@ -7,6 +7,7 @@ spec:
     app: web-app
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: LoadBalancer
+      port: 80        # Port interne du cluster
+      targetPort: 80  # Port du conteneur
+      nodePort: 30080 # 
+  type: NodePort      
