@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   
   push:
-    branches: [ "main" ]
-    paths:
-      - 'app/**'  # Se lance uniquement si on touche au dossier app/
 
 permissions:
   contents: write # Autorisation d'écrire dans le repo (pour changer le tag image)
