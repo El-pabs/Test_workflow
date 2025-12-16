@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: elpabs/webapp_tricarico:latest  # GitHub Actions changera ça tout seul
+        image: elpabs/webapp_tricarico:2ec6736b70d2fb517cbc16effae7969392a5d037
         ports:
         - containerPort: 80
