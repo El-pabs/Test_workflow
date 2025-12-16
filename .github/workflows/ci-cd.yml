@@ -28,19 +28,19 @@ jobs:
         push: true
         # Crée deux tags : "latest" et le SHA unique du commit
         tags: |
-          ${{ secrets.DOCKER_USERNAME }}/mon-app-web:latest
-          ${{ secrets.DOCKER_USERNAME }}/mon-app-web:${{ github.sha }}
+          ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:latest
+          ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:${{ github.sha }}
 
     - name: Update Kubernetes Manifest
       run: |
-        # Remplace l'image dans le fichier YAML par la nouvelle version (SHA)
-        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/mon-app-web:${{ github.sha }}|g" k8s/deployment.yaml
+        # Remplace l'image dans le fichier yml par la nouvelle version (SHA)
+        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:${{ github.sha }}|g" k8s/deployment.yml
         
         # Si le fichier a changé, on commit la modif
         if [[ -n $(git status -s) ]]; then
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          git add k8s/deployment.yaml
+          git add k8s/deployment.yml
           git commit -m "Auto-update image tag to ${{ github.sha }}"
           git push
         fi
