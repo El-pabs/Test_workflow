@@ -1,0 +1,23 @@
+name: Node.js Setup Workflow
+
+# Permet le lancement manuel du workflow
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-node:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout du code (optionnel mais bonne pratique)
+      - uses: actions/checkout@v4
+      
+      # Installation de Node.js version 18
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.1.0
+        with:
+          node-version: '18'
+      
+      # Affichage de la version installée
+      - name: Display Node.js version
+        run: node --version
