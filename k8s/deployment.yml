@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: elpabs/webapp_tricarico:40df8d7f8e2f343fa71fa02d0b438815d84ba39e
+        image: elpabs/webapp_tricarico:89c465e4656401b69eb483639573a438bf2a6f3c
         ports:
         - containerPort: 80
