@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'app/**'  # Se lance uniquement si on touche au dossier app/
+
+permissions:
+  contents: write # Autorisation d'écrire dans le repo (pour changer le tag image)
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and Push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./app
+        push: true
+        # Crée deux tags : "latest" et le SHA unique du commit
+        tags: |
+          ${{ secrets.DOCKER_USERNAME }}/mon-app-web:latest
+          ${{ secrets.DOCKER_USERNAME }}/mon-app-web:${{ github.sha }}
+
+    - name: Update Kubernetes Manifest
+      run: |
+        # Remplace l'image dans le fichier YAML par la nouvelle version (SHA)
+        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/mon-app-web:${{ github.sha }}|g" k8s/deployment.yaml
+        
+        # Si le fichier a changé, on commit la modif
+        if [[ -n $(git status -s) ]]; then
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add k8s/deployment.yaml
+          git commit -m "Auto-update image tag to ${{ github.sha }}"
+          git push
+        fi
