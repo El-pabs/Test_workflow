@@ -1,13 +1,15 @@
 apiVersion: v1
-kind: Service
+kind: Service # Service -> point d'accès réseau stable.
 metadata:
   name: web-service
 spec:
-  selector:
-    app: web-app
+  selector: # vers qui je redirige le traffic
+    app: web-app # Vers moi mon bichon
   ports:
     - protocol: TCP
       port: 80        # Port interne du cluster
-      targetPort: 80  # Port du conteneur
-      nodePort: 30080 # 
-  type: NodePort      
+      targetPort: 80  # Port du conteneur vers lequel je redirige
+      nodePort: 30080 # port sur les nœuds (VM EC2)
+  type: NodePort # Ouvre un port sur CHAQUE serveur (Node) du cluster pour l'accès externe.
+
+  #Si j'avais mis ClusterIP -> uniquement accessible depuis l'intérieur

@@ -12,7 +12,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 # recup code repo
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
@@ -23,22 +23,23 @@ jobs:
     - name: Build and Push Docker image
       uses: docker/build-push-action@v5
       with:
-        context: ./app
-        push: true
-        # Crée deux tags : "latest" et le SHA unique du commit
+        context: ./app # -> emplacement docker file
+        push: true # on envoie vers docker hub (sinon reste sur le runner et disparait)
+        # 2 tags : "latest" et le SHA unique du commit (comme ca tag unique)
         tags: |
           ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:latest
           ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:${{ github.sha }}
 
     - name: Update Kubernetes Manifest
       run: |
-        # Remplace l'image dans le fichier yml par la nouvelle version (SHA)
-        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:${{ github.sha }}|g" k8s/deployment.yml
+        # remplacer ancienne image par nouvelle
+        sed -i "s|image: .*|image: ${{ secrets.DOCKER_USERNAME }}/webapp_tricarico:${{ github.sha }}|g" k8s/deployment.yml 
+        # sed -> Cherche la ligne qui commence par "image: ..." dans deployment.yml
+        # puis remplace par nouvelle image avec SHA unique qu'on vient de créer.
         
-        # Si le fichier a changé, on commit la modif
         if [[ -n $(git status -s) ]]; then
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+          git config --global user.name 'GitHub Actions' # savoir qui a push
+          git config --global user.email 'actions@github.com' 
           git add k8s/deployment.yml
           git commit -m "Auto-update image tag to ${{ github.sha }}"
           git push

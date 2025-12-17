@@ -1,21 +1,21 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment # Type de ressource : Un "Déploiement" (gère les copies de l'app, aka les mises à jour sans coupure).
 metadata:
   name: web-app
   labels:
     app: web-app
 spec:
-  replicas: 2
-  selector:
+  replicas: 2 # nbr copies app, va crée 2 pods 
+  selector: # savoir quels pods gère ce déploiement
     matchLabels:
-      app: web-app
-  template:
-    metadata:
+      app: web-app # gère les pods avec label "app: web-app"
+  template: #a quoi doit ressembler mes pods chef
+    metadata: 
       labels:
         app: web-app
     spec:
-      containers:
+      containers: # liste des conteneurs dans le pod
       - name: web-app
         image: elpabs/webapp_tricarico:40df8d7f8e2f343fa71fa02d0b438815d84ba39e
         ports:
-        - containerPort: 80
+        - containerPort: 80 # port exposé par le conteneur
