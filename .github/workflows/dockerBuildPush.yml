@@ -13,7 +13,7 @@ on:
 # Variable d'environnement
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd-actions-dockerhub-argo
+  IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/ci-cd-actions-dockerhub-argo
   K8S_PATH: k8s/deployment.yml
 
 
@@ -44,8 +44,8 @@ jobs:
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       - name: Build and push Docker image
