@@ -1,21 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment # Type de ressource : Un "Déploiement" (gère les copies de l'app, aka les mises à jour sans coupure).
 metadata:
-  name: web-app
+  name: flask-app
   labels:
-    app: web-app
+    app: flask-app
 spec:
-  replicas: 2 # nbr copies app, va crée 2 pods 
+  replicas: 2 # nbr copies app, va crée 2 pods
   selector: # savoir quels pods gère ce déploiement
     matchLabels:
-      app: web-app # gère les pods avec label "app: web-app"
+      app: flask-app # gère les pods avec label "app: flask-app"
   template: #a quoi doit ressembler mes pods chef
-    metadata: 
+    metadata:
       labels:
-        app: web-app
+        app: flask-app
     spec:
       containers: # liste des conteneurs dans le pod
-      - name: web-app
+      - name: flask-app
         image: elpabs/webapp_tricarico:89c465e4656401b69eb483639573a438bf2a6f3c
         ports:
-        - containerPort: 80 # port exposé par le conteneur
+        - containerPort: 5000 # port exposé par le conteneur
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
