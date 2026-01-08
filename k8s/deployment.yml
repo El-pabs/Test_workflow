@@ -16,7 +16,7 @@ spec:
     spec:
       containers: # liste des conteneurs dans le pod
       - name: flask-app
-        image: elpabs/webapp_tricarico:89c465e4656401b69eb483639573a438bf2a6f3c
+        image: docker.io/elpabs/ci-cd-actions-dockerhub-argo:ab42893
         ports:
         - containerPort: 5000 # port exposé par le conteneur
         resources:
